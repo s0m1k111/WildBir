@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Результаты поиска";
+}
+
+<div class="container-fluid bg-primary py-2 mb-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-3">
+                <a href="/" class="text-white text-decoration-none">
+                    <h4 class="m-0">WBShop</h4>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <form action="/Home/Search" method="get" class="d-flex">
+                    <input type="text" name="search" class="form-control rounded-0" placeholder="Поиск по товарам" value='@ViewData["Search"]'>
+                    <button type="submit" class="btn btn-warning rounded-0">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-3 text-end">
+                <a href="/Home/Cart" class="text-white text-decoration-none">
+                    <i class="bi bi-cart3 fs-4"></i>
+                    <span>Корзина</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h4 class="mb-4">Результаты поиска: '@ViewData["Search"]'</h4>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center">
+                <span class="me-3">Сортировка:</span>
+                <select class="form-select form-select-sm w-auto">
+                    <option selected>По популярности</option>
+                    <option>По цене (сначала дешевые)</option>
+                    <option>По цене (сначала дорогие)</option>
+                    <option>По новизне</option>
+                    <option>По рейтингу</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="load">
+        <!-- Search results will be loaded here -->
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <div class="spinner-border text-primary d-none" role="status" id="loadingSpinner">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            var page = 1;
+            var loading = false;
+            let search = '@ViewData["Search"]'.toString();
+
+            loadMoreNumbers();
+
+            $(window).scroll(function() {
+                if ($(window).scrollTop() + $(window).height() > $(document).height() - 200) {
+                    if (!loading) {
+                        loadMoreNumbers();
+                    }
+                }
+            });
+
+            function loadMoreNumbers() {
+                loading = true;
+                $('#loadingSpinner').removeClass('d-none');
+
+                $.get('/Home/LoadSearch', { page: page, search: search}, function(data) {
+                    if (data) {
+                        $('#load').append(data);
+                        page++;
+                    }
+                }).always(function() {
+                    loading = false;
+                    $('#loadingSpinner').addClass('d-none');
+                });
+            }
+        });
+    </script>
+}

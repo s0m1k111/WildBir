@@ -1,0 +1,52 @@
+﻿@model List<ProductModel>
+
+@foreach (var item in Model)
+{
+    <div class="col-md-3 mb-4">
+        <div class="card h-100">
+            <a href="/Home/InfoProduct?id=@item.Id" class="text-decoration-none">
+                <div class="card-img-container">
+                    <img src="@item.Image" class="card-img-top p-3" alt="@item.Name">
+                </div>
+                <div class="card-body">
+                    <div class="price mb-2">@item.Price ₽</div>
+                    <p class="card-text text-muted small">@item.Name</p>
+                </div>
+            </a>
+            <div class="card-footer bg-white border-0">
+                <button onclick="Cart(@item.Id)" class="btn btn-outline-danger w-100">В корзину</button>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    function Cart(Id) {
+        fetch(`/Home/IdProduct/?id=${Id}`)
+            .then(response => {
+                if (response.ok) {
+                    // Show success notification
+                    const toast = document.createElement('div');
+                    toast.className = 'position-fixed bottom-0 end-0 p-3';
+                    toast.innerHTML = `
+                        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header bg-success text-white">
+                                <strong class="me-auto">Успешно</strong>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                Товар добавлен в корзину
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(toast);
+
+                    // Remove toast after 3 seconds
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 3000);
+                }
+            });
+    }
+</script>
+

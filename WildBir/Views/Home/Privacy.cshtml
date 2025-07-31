@@ -1,0 +1,27 @@
+﻿@model ProductModel
+@{
+    ViewData["Title"] = "Добавить товар";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+
+    <form method="post" asp-action="InsertProduct" class="mt-4">
+        <div class="mb-3">
+            <label for="Image" class="form-label">URL изображения</label>
+            <input type="text" class="form-control" id="Image" asp-for="Image">
+        </div>
+
+        <div class="mb-3">
+            <label for="Price" class="form-label">Цена</label>
+            <input type="text" class="form-control" id="Price" asp-for="Price">
+        </div>
+
+        <div class="mb-3">
+            <label for="Name" class="form-label">Название товара</label>
+            <input type="text" class="form-control" id="Name" asp-for="Name">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Добавить товар</button>
+    </form>
+</div>
